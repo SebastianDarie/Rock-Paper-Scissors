@@ -1,57 +1,55 @@
-const hands = [ 'rock', 'paper', 'scissors' ]
+const buttons = document.querySelectorAll('[data-selection]')
+const pScore = document.querySelector('[data-player-score]')
+const cScore = document.querySelector('[data-computer-score]')
+const draw = document.querySelector('[data-draw-score]')
+const finalScore = document.querySelector('[data-final-score]')
+
+const hands = [
+    {
+        name: 'rock',
+        beats: 'scissors'
+    },
+    {
+        name: 'paper',
+        beats: 'rock'
+    },
+    {
+        name: 'scissors',
+        beats: 'paper'
+    }
+]
 
 function computerPlay () {
     const hand = hands[Math.floor(Math.random() * hands.length)]
     return hand
 }
 
-let playerPoints = 0
-let computerPoints = 0
+function wins(playerSelection, computerSelection) {
+    return playerSelection.beats === computerSelection.name
+}
+
+function incScore(score) {
+    score.innerText = parseInt(score.innerText) + 1
+}
 
 function playRound(playerSelection, computerSelection) {
-    playerSelection = playerSelection.toLowerCase()
-    if(playerSelection === computerSelection) {
-        return 'Draw'
-    } else if(playerSelection === 'paper' && computerSelection === 'rock') {
-        playerPoints += 1
-        return 'You win!'
-    } else if(playerSelection === 'paper' && computerSelection === 'scissors') {
-        computerPoints += 1
-        return 'You lose!'
-    } else if(playerSelection === 'scissors' && computerSelection === 'paper') {
-        playerPoints += 1
-        return 'You win!'
-    } else if(playerSelection === 'scissors' && computerSelection === 'rock') {
-        computerPoints += 1
-        return 'You lose!'
-    } else if(playerSelection === 'rock' && computerSelection === 'paper') {
-        computerPoints += 1
-        return 'You lose!'
-    } else if(playerSelection === 'rock' && computerSelection === 'scissors') {
-        playerPoints += 1
-        return 'You win!'
-    }
-}
+    const pWin = wins(playerSelection, computerSelection)
+    const cWin = wins(computerSelection, playerSelection)
 
-function game() {
-    let i = 0
-    do {
-        let playerSelection = prompt('Choose your hand')
-        let computerSelection = computerPlay()
-        computerSelection
-        console.log(playRound(playerSelection, computerSelection))
-        
-        i++
-    } while(i < 5)
-        
-
-    if(playerPoints > computerPoints){
-        return 'The Player is the winner!'
-    } else if(playerPoints === computerPoints) {
-        return 'It is a draw!'
+    if (pWin) {
+        incScore(pScore)
+    } else if (cWin) {
+        incScore(cScore)
     } else {
-        return 'The Computer is the winner!'
+        incScore(draw)
     }
 }
 
-console.log(game())
+buttons.forEach(button => {
+    button.addEventListener('click', e => {
+        const selectionName = button.dataset.selection
+        const hand = hands.find(hand => hand.name === selectionName)
+        const computerSelection = computerPlay()
+        playRound(hand, computerSelection)
+    })
+})

@@ -1,0 +1,29 @@
+body {
+    background-color: #e84545;
+}
+
+.selections {
+    display: flex;
+    justify-content: center;
+}
+  
+.selection {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 2rem;
+    transition: 100ms;
+    padding-top: 270px;
+    margin: 10px;
+}
+
+.selection:hover {
+    transform: scale(1.2);
+}
+
+.results {
+    color: #364f6b;
+    font-weight: 400;
+    font-size: 20px;
+}
