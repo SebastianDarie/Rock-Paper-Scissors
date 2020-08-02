@@ -3,6 +3,7 @@ const pScore = document.querySelector('[data-player-score]')
 const cScore = document.querySelector('[data-computer-score]')
 const draw = document.querySelector('[data-draw-score]')
 const finalScore = document.querySelector('[data-final-score]')
+const restart = document.querySelector('.restart')
 
 const hands = [
     {
@@ -19,6 +20,8 @@ const hands = [
     }
 ]
 
+let winner = true
+
 function computerPlay () {
     const hand = hands[Math.floor(Math.random() * hands.length)]
     return hand
@@ -32,10 +35,16 @@ function incScore(score) {
     score.innerText = parseInt(score.innerText) + 1
 }
 
-function playRound(playerSelection, computerSelection) {
+function addWinner(winner) {
+    const div = document.createElement('div')
+    div.innerText = `The winner is the ${winner}!`
+    finalScore.after(div)
+}
+
+ function playRound(playerSelection, computerSelection) {
     const pWin = wins(playerSelection, computerSelection)
     const cWin = wins(computerSelection, playerSelection)
-
+    
     if (pWin) {
         incScore(pScore)
     } else if (cWin) {
@@ -43,13 +52,26 @@ function playRound(playerSelection, computerSelection) {
     } else {
         incScore(draw)
     }
+
+    if (parseInt(pScore.innerText) === 5 && winner === true ) {
+        addWinner('Player') 
+        winner = false
+    } else if (parseInt(cScore.innerText) === 5 && winner === true) {
+        addWinner('Computer')
+        winner = false
+    }
 }
 
 buttons.forEach(button => {
     button.addEventListener('click', e => {
         const selectionName = button.dataset.selection
-        const hand = hands.find(hand => hand.name === selectionName)
+        const playerSelection = hands.find(hand => hand.name === selectionName)
         const computerSelection = computerPlay()
-        playRound(hand, computerSelection)
+
+        playRound(playerSelection, computerSelection)
     })
+})
+
+restart.addEventListener('click', e => {
+    location.reload()
 })
